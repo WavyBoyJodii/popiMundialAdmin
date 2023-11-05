@@ -1,9 +1,11 @@
 import Dashboard from './components/Dashboard';
+import { Outlet } from 'react-router-dom';
 
 function App() {
   return (
     <>
       <Dashboard />
+      <Outlet />
     </>
   );
 }
