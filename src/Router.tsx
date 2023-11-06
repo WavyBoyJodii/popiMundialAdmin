@@ -8,22 +8,25 @@ import {
 import App from './App';
 import Login from './components/Login';
 import ErrorPage from './components/ErrorPage';
-
+import Dashboard from './components/Dashboard';
 import { useLoginStatus } from './context/LoginStatusContext';
 
 function Router() {
-  const { isLoggedIn } = useLoginStatus();
+  const { state } = useLoginStatus();
+  console.log(state.isLoggedIn);
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <Route
-        path="/"
-        element={isLoggedIn ? <Navigate to={'home'} /> : <Login />}
-        errorElement={<ErrorPage />}
-      >
+      <Route path="/" element={<App />} errorElement={<ErrorPage />}>
         <Route
-          path="home"
-          element={isLoggedIn ? <App /> : <Navigate to={'/'} />}
+          index={true}
+          element={
+            state.isLoggedIn ? <Dashboard /> : <Navigate to={'/login'} />
+          }
         />
+        <Route
+          path="/login"
+          element={state.isLoggedIn ? <Navigate to={'/'} /> : <Login />}
+        ></Route>
       </Route>
     )
   );

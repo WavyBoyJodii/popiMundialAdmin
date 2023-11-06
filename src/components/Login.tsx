@@ -19,6 +19,8 @@ import {
 } from '@/lib/types';
 import axios from 'axios';
 import localforage from 'localforage';
+import { useLoginStatus } from '@/context/LoginStatusContext';
+import Container from './Container';
 
 export default function Login() {
   const form = useForm<ZLoginSchema>({
@@ -29,6 +31,8 @@ export default function Login() {
     },
   });
 
+  const { dispatch } = useLoginStatus();
+
   const onSubmit = async (data: ZLoginSchema) => {
     try {
       const result = await axios.post<PositiveResponseType>(
@@ -38,6 +42,7 @@ export default function Login() {
       console.log(result);
       localforage.setItem('user', result.data.user._id);
       localforage.setItem('bearer', result.data.token);
+      dispatch({ type: 'Login' });
     } catch (err) {
       if (axios.isAxiosError<NegativeResponseType>(err)) {
         console.log(err);
@@ -58,40 +63,43 @@ export default function Login() {
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="shadcn" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormDescription>Input Password</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Submit</Button>
-      </form>
-    </Form>
+    <Container>
+      {' '}
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input placeholder="shadcn" {...field} />
+                </FormControl>
+                <FormDescription>
+                  This is your public display name.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormDescription>Input Password</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit">Submit</Button>
+        </form>
+      </Form>
+    </Container>
   );
 }
