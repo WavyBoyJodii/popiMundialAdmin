@@ -1,7 +1,10 @@
 import * as z from 'zod';
 
 export const loginSchema = z.object({
-  username: z.string().min(3, 'Must Be atleast 3 characters long'),
+  username: z
+    .string()
+    .min(3, 'Must Be atleast 3 characters long')
+    .toLowerCase(),
   password: z.string().min(7, 'Password must be atleast 7 characters long'),
 });
 
