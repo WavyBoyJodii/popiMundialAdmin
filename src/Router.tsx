@@ -9,7 +9,7 @@ import App from './App';
 import Login from './components/Login';
 import ErrorPage from './components/ErrorPage';
 import Dashboard from './components/Dashboard';
-import { useLoginStatus } from './context/LoginStatusContext';
+import { useLoginStatus } from './hooks/useLoginStatus';
 
 function Router() {
   const { state } = useLoginStatus();

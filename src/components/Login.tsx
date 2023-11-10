@@ -18,8 +18,8 @@ import {
   NegativeResponseType,
 } from '@/lib/types';
 import axios from 'axios';
-import localforage from 'localforage';
-import { useLoginStatus } from '@/context/LoginStatusContext';
+// import localforage from 'localforage';
+import { useLoginStatus } from '@/hooks/useLoginStatus';
 import Container from './Container';
 
 export default function Login() {
@@ -40,8 +40,8 @@ export default function Login() {
         data
       );
       console.log(result);
-      localforage.setItem('user', result.data.user._id);
-      localforage.setItem('bearer', result.data.token);
+      localStorage.setItem('user', result.data.user.username);
+      localStorage.setItem('bearer', result.data.token);
       dispatch({ type: 'Login' });
     } catch (err) {
       if (axios.isAxiosError<NegativeResponseType>(err)) {
@@ -94,7 +94,7 @@ export default function Login() {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input type="password" required {...field} />
                     </FormControl>
                     <FormDescription>Input Password</FormDescription>
                     <FormMessage />

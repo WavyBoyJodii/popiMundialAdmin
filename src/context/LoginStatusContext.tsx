@@ -1,10 +1,5 @@
-import {
-  createContext,
-  useContext,
-  ReactNode,
-  useReducer,
-  useEffect,
-} from 'react';
+import { createContext, ReactNode, useReducer, useEffect } from 'react';
+import { authReducer } from '@/lib/utils';
 
 type LoginStatusProviderProps = {
   children: ReactNode;
@@ -19,29 +14,11 @@ type LoginStatusContext = {
   state: LoginState;
   dispatch: React.Dispatch<AuthAction>;
 };
-const LoginStatusContext = createContext({} as LoginStatusContext);
+export const LoginStatusContext = createContext({} as LoginStatusContext);
 
-export function useLoginStatus() {
-  const context = useContext(LoginStatusContext);
-  if (!context) {
-    throw new Error('useLoginStatus must be used within a LoginStatusProvider');
-  }
-  return context;
-}
 // Initial state
 const initialState: LoginState = {
   isLoggedIn: false,
-};
-
-export const authReducer = (state: LoginState, action: AuthAction) => {
-  switch (action.type) {
-    case 'Login':
-      return { isLoggedIn: true };
-    case 'Logout':
-      return { isLoggedIn: false };
-    default:
-      return state;
-  }
 };
 
 export function LoginStatusProvider({ children }: LoginStatusProviderProps) {

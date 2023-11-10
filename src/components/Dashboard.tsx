@@ -1,22 +1,13 @@
-import Container from './Container';
-import { useLoginStatus } from '@/context/LoginStatusContext';
-import localforage from 'localforage';
-import { Button } from './ui/button';
-export default function Dashboard() {
-  const { dispatch } = useLoginStatus();
+import Header from './Header';
+import SideBar from './SideBar';
+import { Outlet } from 'react-router-dom';
 
-  function logout() {
-    localforage.clear();
-    dispatch({ type: 'Logout' });
-  }
+export default function Dashboard() {
   return (
-    <Container>
-      <div className=" flex flex-col place-content-center">
-        <p className=" text-lg">Dashboard</p>
-        <Button onClick={logout} variant={'ghost'} className=" h-12 w-12">
-          Logout
-        </Button>
-      </div>
-    </Container>
+    <>
+      <Header />
+      <SideBar />
+      <Outlet />
+    </>
   );
 }
