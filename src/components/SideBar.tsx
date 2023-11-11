@@ -2,9 +2,9 @@ import { NavLink } from 'react-router-dom';
 
 function SideBar() {
   return (
-    <div className="flex flex-col h-screen w-64 border-r-2">
+    <div className="flex flex-col h-full w-64 border-r-2">
       <nav className=" flex flex-col gap-10 p-10">
-        <NavLink to={'/home'}>
+        <NavLink to={'/'}>
           <div className="flex gap-6 items-center hover:scale-105 transition-all ease-in-out duration-150">
             <svg
               width="15"

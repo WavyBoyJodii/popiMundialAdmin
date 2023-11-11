@@ -9,6 +9,9 @@ import App from './App';
 import Login from './components/Login';
 import ErrorPage from './components/ErrorPage';
 import Dashboard from './components/Dashboard';
+import Home from './components/Home';
+import NewPost from './components/NewPost';
+import NewBlogger from './components/NewBlogger';
 import { useLoginStatus } from './hooks/useLoginStatus';
 
 function Router() {
@@ -18,11 +21,22 @@ function Router() {
     createRoutesFromElements(
       <Route path="/" element={<App />} errorElement={<ErrorPage />}>
         <Route
-          index={true}
           element={
             state.isLoggedIn ? <Dashboard /> : <Navigate to={'/login'} />
           }
-        />
+        >
+          <Route index={true} element={<Home />} errorElement={<ErrorPage />} />
+          <Route
+            path="/newPost"
+            element={<NewPost />}
+            errorElement={<ErrorPage />}
+          />
+          <Route
+            path="/newBlogger"
+            element={<NewBlogger />}
+            errorElement={<ErrorPage />}
+          />
+        </Route>
         <Route
           path="/login"
           element={state.isLoggedIn ? <Navigate to={'/'} /> : <Login />}
