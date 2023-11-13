@@ -8,7 +8,18 @@ export const loginSchema = z.object({
   password: z.string().min(7, 'Password must be atleast 7 characters long'),
 });
 
+export const newPostSchema = z.object({
+  title: z.string().min(1, 'Post must have a Title'),
+  art: z.string().url({ message: 'Invaid Url' }),
+  mediaUrl: z.string().url({ message: 'Invaid Url' }),
+  content: z.any(),
+  tags: z.string().optional(),
+  genre: z.string().min(1, 'Post must have a genre'),
+});
+
 export type ZLoginSchema = z.infer<typeof loginSchema>;
+
+export type ZNewPostSchema = z.infer<typeof newPostSchema>;
 
 export interface BloggerType {
   username: string;
@@ -25,6 +36,12 @@ export interface UserType extends BloggerType {
 export interface PositiveResponseType {
   user: UserType;
   token: string;
+}
+
+export interface NewPostPositiveResponse {}
+
+export interface PositiveDeleteResponseType {
+  message: string;
 }
 
 export interface AxiosErrorMessage {

@@ -1,8 +1,11 @@
 import { NavLink } from 'react-router-dom';
-
-function SideBar() {
+// "flex h-full w-64 border-r-2"
+function SideBar({ className }: { className: string }) {
   return (
-    <div className="flex flex-col h-full w-64 border-r-2">
+    <div className={`${className} flex-col`}>
+      <div className=" flex justify-center items-center">
+        <h3 className="text-xl font-bold px-3 py-6">PopiMundial</h3>
+      </div>
       <nav className=" flex flex-col gap-10 p-10">
         <NavLink to={'/'}>
           <div className="flex gap-6 items-center hover:scale-105 transition-all ease-in-out duration-150">

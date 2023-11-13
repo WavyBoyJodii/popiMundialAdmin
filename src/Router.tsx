@@ -10,7 +10,7 @@ import Login from './components/Login';
 import ErrorPage from './components/ErrorPage';
 import Dashboard from './components/Dashboard';
 import Home from './components/Home';
-import NewPost from './components/NewPost';
+import Editor from './components/Editor';
 import NewBlogger from './components/NewBlogger';
 import { useLoginStatus } from './hooks/useLoginStatus';
 
@@ -28,7 +28,7 @@ function Router() {
           <Route index={true} element={<Home />} errorElement={<ErrorPage />} />
           <Route
             path="/newPost"
-            element={<NewPost />}
+            element={<Editor />}
             errorElement={<ErrorPage />}
           />
           <Route

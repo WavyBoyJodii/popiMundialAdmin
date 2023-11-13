@@ -23,7 +23,7 @@ function Home() {
     getPosts();
   }, []);
   return (
-    <div className=" flex justify-center">
+    <div className=" flex flex-1 overflow-y-auto px-4 justify-center">
       <PostList posts={latestPosts} />
     </div>
   );
