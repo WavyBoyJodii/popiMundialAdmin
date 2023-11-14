@@ -26,9 +26,11 @@ export default function SmallPost({ data }: SmallPostProps) {
   const { toast } = useToast();
 
   const deletePost = async (id: string) => {
+    const token = localStorage.getItem('bearer');
     try {
-      const result = await axios.post<PositiveDeleteResponseType>(
-        `https://firstblogbackend-production.up.railway.app/user/post/${id}`
+      const result = await axios.delete<PositiveDeleteResponseType>(
+        `https://firstblogbackend-production.up.railway.app/user/post/${id}`,
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       toast({
         description: `${result.data.message}`,
@@ -38,7 +40,7 @@ export default function SmallPost({ data }: SmallPostProps) {
     }
   };
   return (
-    <Card className="flex flex-col w-auto h-auto rounded-3xl outline-0 focus:ring-1 hover:ring-1 ring-current transition duration-300 p-0 hover:cursor-pointer">
+    <Card className="flex flex-col w-auto h-auto rounded-3xl outline-0">
       <CardContent className="p-0 relative">
         <img
           src={decodedArt}

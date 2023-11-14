@@ -1,6 +1,6 @@
 import { useCallback, useRef, useEffect } from 'react';
 import type EditorJS from '@editorjs/editorjs';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { newPostSchema, ZNewPostSchema } from '@/lib/types';
@@ -18,8 +18,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useNavigate } from 'react-router-dom';
+import { DevTool } from '@hookform/devtools';
+
 export default function Editor() {
   const {
+    control,
     register,
     handleSubmit,
     formState: { errors },
@@ -37,7 +40,7 @@ export default function Editor() {
 
   const navigate = useNavigate();
   const isReady = useRef(false);
-  const ref = useRef<EditorJS>();
+  const editorRef = useRef<EditorJS>();
   //   const { toast } = useToast();
   const initializeEditor = useCallback(async () => {
     const EditorJS = (await import('@editorjs/editorjs')).default;
@@ -51,11 +54,11 @@ export default function Editor() {
 
     const token = localStorage.getItem('bearer');
 
-    if (!ref.current) {
+    if (!editorRef.current) {
       const editor = new EditorJS({
         holder: 'editor',
         onReady() {
-          ref.current = editor;
+          editorRef.current = editor;
         },
         placeholder: 'Type here to write your post...',
         inlineToolbar: true,
@@ -91,8 +94,8 @@ export default function Editor() {
       isReady.current = true;
 
       return () => {
-        ref.current?.destroy();
-        ref.current = undefined;
+        editorRef.current?.destroy();
+        editorRef.current = undefined;
       };
     }
   }, [initializeEditor]);
@@ -111,7 +114,7 @@ export default function Editor() {
 
   const onSubmit = async (data: ZNewPostSchema) => {
     const token = localStorage.getItem('bearer');
-    const blocks = await ref.current?.save();
+    const blocks = await editorRef.current?.save();
     // const tagsString = data.tags?.toString();
     // const tagsArray = tagsString?.split(' ');
     const payload: ZNewPostSchema = {
@@ -122,6 +125,7 @@ export default function Editor() {
       content: blocks,
       tags: data.tags,
     };
+    console.log(payload);
 
     try {
       const result = await axios.post<NewPostPositiveResponse>(
@@ -177,18 +181,30 @@ export default function Editor() {
                   {...register('mediaUrl')}
                 />
               </div>
-              <div id="editor" className=" min-w-full border-gray-500" />
+              <div
+                id="editor"
+                className=" min-w-full border-gray-500"
+                {...register('content')}
+              />
               <div className="flex flex-col gap-2">
-                <Select {...register('genre')}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Choose Genre" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Dembow">Dembow</SelectItem>
-                    <SelectItem value="Reggaeton">Reggaeton</SelectItem>
-                    <SelectItem value="Trap">Trap</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Controller
+                  control={control}
+                  name="genre"
+                  render={({ field }) => {
+                    return (
+                      <Select onValueChange={field.onChange} {...field}>
+                        <SelectTrigger className="w-[180px]">
+                          <SelectValue placeholder="Choose Genre" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Dembow">Dembow</SelectItem>
+                          <SelectItem value="Reggaeton">Reggaeton</SelectItem>
+                          <SelectItem value="Trap">Trap</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    );
+                  }}
+                />
               </div>
               <div className="flex flex-col gap-2">
                 <Label htmlFor="tags">Tags</Label>
@@ -200,6 +216,7 @@ export default function Editor() {
               </div>
               <Button>Create Post</Button>
             </form>
+            <DevTool control={control} />
           </div>
         </div>
       </Container>
