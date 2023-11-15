@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { newPostSchema, ZNewPostSchema } from '@/lib/types';
 import { NewPostPositiveResponse, NegativeResponseType } from '@/lib/types';
-import { toast } from '@/hooks/useToast';
+import { useToast } from './ui/use-toast';
 import { Button } from './ui/button';
 import { Label } from './ui/label';
 import { Input } from './ui/input';
@@ -38,6 +38,7 @@ export default function Editor() {
     },
   });
 
+  const { toast } = useToast();
   const navigate = useNavigate();
   const isReady = useRef(false);
   const editorRef = useRef<EditorJS>();
@@ -110,7 +111,7 @@ export default function Editor() {
         });
       }
     }
-  }, [errors]);
+  }, [errors, toast]);
 
   const onSubmit = async (data: ZNewPostSchema) => {
     const token = localStorage.getItem('bearer');

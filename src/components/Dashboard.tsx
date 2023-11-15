@@ -1,6 +1,7 @@
 import Header from './Header';
 import SideBar from './SideBar';
 import { Outlet } from 'react-router-dom';
+import { Toaster } from './ui/toaster';
 
 export default function Dashboard() {
   return (
@@ -10,6 +11,7 @@ export default function Dashboard() {
         <div className="flex flex-1 flex-col">
           <Header className="" />
           <Outlet />
+          <Toaster />
         </div>
       </div>
     </div>

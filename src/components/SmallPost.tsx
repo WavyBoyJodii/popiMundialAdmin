@@ -16,6 +16,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { useNavigate } from 'react-router-dom';
 
 interface SmallPostProps {
   data: PostType;
@@ -24,6 +25,7 @@ interface SmallPostProps {
 export default function SmallPost({ data }: SmallPostProps) {
   const decodedArt = validator.unescape(data.art);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const deletePost = async (id: string) => {
     const token = localStorage.getItem('bearer');
@@ -35,6 +37,7 @@ export default function SmallPost({ data }: SmallPostProps) {
       toast({
         description: `${result.data.message}`,
       });
+      navigate('/');
     } catch (err) {
       console.log(err);
     }
@@ -46,8 +49,10 @@ export default function SmallPost({ data }: SmallPostProps) {
           src={decodedArt}
           className=" aspect-square object-cover rounded-3xl"
         />
-        <div className=" flex flex-col backdrop-filter backdrop-blur-md bg-opacity-50 absolute bottom-0 w-full h-16 rounded-b-3xl   bg-white">
-          <p className="text-center p-6  text-sm md:text-base">{data.title}</p>
+        <div className=" flex flex-col backdrop-filter backdrop-blur-md bg-opacity-50 absolute bottom-0 w-full h-16 rounded-b-3xl bg-white">
+          <p className="text-center p-6 text-xs md:text-sm lg:text-base">
+            {data.title}
+          </p>
           <div className="flex justify-around">
             <Link to={`/edit/${data._id}`}>
               <Button>Edit</Button>

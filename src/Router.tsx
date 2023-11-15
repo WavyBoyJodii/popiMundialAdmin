@@ -12,6 +12,7 @@ import Dashboard from './components/Dashboard';
 import Home from './components/Home';
 import Editor from './components/Editor';
 import NewBlogger from './components/NewBlogger';
+import PostPage from './components/PostPage';
 import { useLoginStatus } from './hooks/useLoginStatus';
 
 function Router() {
@@ -34,6 +35,11 @@ function Router() {
           <Route
             path="/newBlogger"
             element={<NewBlogger />}
+            errorElement={<ErrorPage />}
+          />
+          <Route
+            path="/post/:postId"
+            element={<PostPage />}
             errorElement={<ErrorPage />}
           />
         </Route>
