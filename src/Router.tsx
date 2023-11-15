@@ -14,6 +14,7 @@ import Editor from './components/Editor';
 import NewBlogger from './components/NewBlogger';
 import PostPage from './components/PostPage';
 import { useLoginStatus } from './hooks/useLoginStatus';
+import EditPost from './components/EditPost';
 
 function Router() {
   const { state } = useLoginStatus();
@@ -40,6 +41,11 @@ function Router() {
           <Route
             path="/post/:postId"
             element={<PostPage />}
+            errorElement={<ErrorPage />}
+          />
+          <Route
+            path="/edit/:postId"
+            element={<EditPost />}
             errorElement={<ErrorPage />}
           />
         </Route>

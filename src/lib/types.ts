@@ -1,3 +1,4 @@
+import { OutputBlockData } from '@editorjs/editorjs';
 import * as z from 'zod';
 
 export const loginSchema = z.object({
@@ -65,13 +66,18 @@ export interface AxiosErrorMessage {
 export interface NegativeResponseType {
   info: AxiosErrorMessage;
 }
+export interface ContentData {
+  blocks: OutputBlockData[];
+  time: number;
+  version: string;
+}
 
 export interface PostType {
   _id: string;
   title: string;
   art: string;
   mediaUrl: string;
-  content: string;
+  content: ContentData;
   date_created: Date;
   tags: string[];
   genre: string;

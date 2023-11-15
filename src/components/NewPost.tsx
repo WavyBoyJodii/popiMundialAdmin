@@ -27,7 +27,7 @@ function NewPost() {
       art: '',
       mediaUrl: '',
       content: '',
-      tags: [''],
+      tags: '',
       genre: '',
     },
   });

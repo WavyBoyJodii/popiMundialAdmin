@@ -37,7 +37,7 @@ export default function SmallPost({ data }: SmallPostProps) {
       toast({
         description: `${result.data.message}`,
       });
-      navigate('/');
+      navigate(0);
     } catch (err) {
       console.log(err);
     }

@@ -19,8 +19,19 @@ import {
 } from '@/components/ui/select';
 import { useNavigate } from 'react-router-dom';
 import { DevTool } from '@hookform/devtools';
+import { PostType } from '@/lib/types';
+import validator from 'validator';
 
-export default function Editor() {
+interface EditorProps {
+  post?: PostType;
+}
+
+export default function Editor({ post }: EditorProps) {
+  const decodedTitle = post ? validator.unescape(post.title) : '';
+  const decodedMediaUrl = post ? validator.unescape(post.mediaUrl) : '';
+  const decodedArt = post ? validator.unescape(post.art) : '';
+  const decodedTags = post ? validator.unescape(post.tags.toString()) : '';
+
   const {
     control,
     register,
@@ -29,12 +40,12 @@ export default function Editor() {
   } = useForm<ZNewPostSchema>({
     resolver: zodResolver(newPostSchema),
     defaultValues: {
-      title: '',
-      art: '',
-      mediaUrl: '',
+      title: decodedTitle,
+      art: decodedArt,
+      mediaUrl: decodedMediaUrl,
       content: null,
-      tags: '',
-      genre: '',
+      tags: decodedTags,
+      genre: post?.genre,
     },
   });
 
@@ -52,7 +63,8 @@ export default function Editor() {
     const Code = (await import('@editorjs/code')).default;
     const LinkTool = (await import('@editorjs/link')).default;
     const InlineCode = (await import('@editorjs/inline-code')).default;
-
+    const blocksArray = post ? post.content.blocks : [];
+    console.log(blocksArray);
     const token = localStorage.getItem('bearer');
 
     if (!editorRef.current) {
@@ -63,7 +75,7 @@ export default function Editor() {
         },
         placeholder: 'Type here to write your post...',
         inlineToolbar: true,
-        data: { blocks: [] },
+        data: { blocks: blocksArray },
         tools: {
           header: Header,
           linkTool: {
@@ -84,7 +96,7 @@ export default function Editor() {
         },
       });
     }
-  }, []);
+  }, [post]);
 
   useEffect(() => {
     const init = async () => {
@@ -129,13 +141,29 @@ export default function Editor() {
     console.log(payload);
 
     try {
-      const result = await axios.post<NewPostPositiveResponse>(
-        'https://firstblogbackend-production.up.railway.app/user/post/create',
-        payload,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      console.log(result.data);
-      navigate('/');
+      if (!post) {
+        const result = await axios.post<NewPostPositiveResponse>(
+          'https://firstblogbackend-production.up.railway.app/user/post/create',
+          payload,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        console.log(result.data);
+        toast({
+          description: `New Post Titled ${payload.title} created `,
+        });
+        navigate('/');
+      } else {
+        const updatePostResult = await axios.put<NewPostPositiveResponse>(
+          `https://firstblogbackend-production.up.railway.app/user/post/${post._id}`,
+          payload,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        console.log(updatePostResult.data);
+        toast({
+          description: `Post Titled ${payload.title} has been updated`,
+        });
+        navigate('/');
+      }
     } catch (err) {
       if (axios.isAxiosError<NegativeResponseType>(err)) {
         console.log(err.response);
@@ -184,7 +212,7 @@ export default function Editor() {
               </div>
               <div
                 id="editor"
-                className=" min-w-full border-gray-500"
+                className=" min-w-full border-gray-500 max-h-60 overflow-y-auto"
                 {...register('content')}
               />
               <div className="flex flex-col gap-2">
