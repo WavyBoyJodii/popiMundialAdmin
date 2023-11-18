@@ -43,46 +43,50 @@ export default function SmallPost({ data }: SmallPostProps) {
     }
   };
   return (
-    <Card className="flex flex-col w-auto h-auto rounded-3xl outline-0">
-      <CardContent className="p-0 relative">
-        <img
-          src={decodedArt}
-          className=" aspect-square object-cover rounded-3xl"
-        />
-        <div className=" flex flex-col backdrop-filter backdrop-blur-md bg-opacity-50 absolute bottom-0 w-full h-16 rounded-b-3xl bg-white">
-          <p className="text-center p-6 text-xs md:text-sm lg:text-base">
-            {data.title}
-          </p>
-          <div className="flex justify-around">
-            <Link to={`/edit/${data._id}`}>
-              <Button>Edit</Button>
-            </Link>
-            <Link to={`/post/${data._id}`}>
-              <Button>View</Button>
-            </Link>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant={'destructive'}>Delete</Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action cannot be undone. This will permanently delete
-                    this post.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={() => deletePost(data._id)}>
-                    Delete
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+    <div className=" flex flex-col gap-6 mb-6">
+      <Card className="flex flex-col w-auto h-auto rounded-3xl outline-0 p-0">
+        <CardContent className="p-0 relative m-0">
+          <img
+            src={decodedArt}
+            className=" aspect-square object-cover rounded-3xl h-96"
+          />
+
+          <div className=" flex flex-col backdrop-filter backdrop-blur-md bg-opacity-50 absolute bottom-0 w-full h-24 rounded-b-3xl bg-white">
+            <p className="text-center p-6 text-xs md:text-sm lg:text-base">
+              {data.title}
+            </p>
+            {/* <div className="flex justify-around"></div> */}
           </div>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+      <div className="flex justify-around">
+        <Link to={`/edit/${data._id}`}>
+          <Button>Edit</Button>
+        </Link>
+        <Link to={`/post/${data._id}`}>
+          <Button>View</Button>
+        </Link>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant={'destructive'}>Delete</Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete this
+                post.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={() => deletePost(data._id)}>
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
+    </div>
   );
 }

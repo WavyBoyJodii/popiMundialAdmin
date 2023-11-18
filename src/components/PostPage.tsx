@@ -1,12 +1,26 @@
 import Container from './Container';
 // import { useLoaderData } from 'react-router-dom';
 import axios from 'axios';
-import { PostType } from '@/lib/types';
+import { PostType, PositiveDeleteResponseType } from '@/lib/types';
 import { DateTime } from 'luxon';
 import validator from 'validator';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import EditorOutput from './EditorOutput';
+import { Link } from 'react-router-dom';
+import { Button } from './ui/button';
+import { useToast } from '@/components/ui/use-toast';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 // interface RouteParams {
 //   postId: string;
@@ -43,6 +57,25 @@ export default function PostPage() {
     getPost();
   }, [params]);
 
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const deletePost = async (id: string) => {
+    const token = localStorage.getItem('bearer');
+    try {
+      const result = await axios.delete<PositiveDeleteResponseType>(
+        `https://firstblogbackend-production.up.railway.app/user/post/${id}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toast({
+        description: `${result.data.message}`,
+      });
+      navigate('/');
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   // const { post } = useLoaderData() as PostPageData;
   if (!post) {
     return <p>Loading....</p>;
@@ -72,8 +105,8 @@ export default function PostPage() {
         </div>
         <div className=" flex justify-center w-full h-1/3">
           <iframe
-            width="560"
-            height="315"
+            width="640"
+            height="360"
             src={decodedMediaUrl}
             title="YouTube video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -90,6 +123,32 @@ export default function PostPage() {
           className="p-20 text-base text-center"
           content={post.content}
         />
+      </div>
+
+      <div className="flex justify-center gap-8 h-20 mt-2 border-gray-600">
+        <Link to={`/edit/${post._id}`}>
+          <Button>Edit</Button>
+        </Link>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant={'destructive'}>Delete</Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete this
+                post.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={() => deletePost(post._id)}>
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </Container>
   );
